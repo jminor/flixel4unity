@@ -1,4 +1,6 @@
 #pragma strict
+#pragma implicit
+#pragma downcast
 
 //package com.adamatomic.Mode
 //{
@@ -24,13 +26,13 @@ static public var SndJet:AudioClip;
 		
 		private var _gibs:FlxEmitter;
 		private var _jets:FlxEmitter;
-		private var _p:Player;
+		private var _p:FlxSprite;
 		private var _timer:Number;
 		private var _b:FlxArray;
 		static private var _cb:uint = 0;
 		private var _shotClock:Number;
 		
-		public function Bot(xPos:int,yPos:int,Bullets:FlxArray,ThePlayer:Player)
+		public function Bot(xPos:int,yPos:int,Bullets:FlxArray,ThePlayer:FlxSprite)
 		{
 			super(ImgBot,xPos,yPos,true);
 			_p = ThePlayer;

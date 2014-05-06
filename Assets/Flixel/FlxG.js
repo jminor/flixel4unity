@@ -1,4 +1,6 @@
 #pragma strict
+#pragma implicit
+#pragma downcast
 
 //package com.adamatomic.flixel
 //{
@@ -18,6 +20,7 @@ class FlxG
 	{
 		//@desc Represents the amount of time in seconds that passed since last frame
 		static public var elapsed:Number;
+		static public var frameCounter:Number;
 		//@desc A reference or pointer to the current FlxState object being used by the game
 		static public var state:FlxState;
 		static public var width:uint;
@@ -429,15 +432,24 @@ class FlxG
 		//@desc		Collides a FlxSprite against the FlxCores in the array 
 		//@param	Array		An array of FlxCore objects
 		//@param	Sprite		A FlxSprite object
-		static public function collideArray(Cores:FlxArray,Sprite:FlxSprite):void
+		static public function collideArray(cores:FlxArray,sprite:FlxSprite):void
 		{
-			if((Sprite == null) || !Sprite.exists || Sprite.dead) return;
+			if((sprite == null) || !sprite.exists || sprite.dead) return;
 			var core:FlxCore;
-			for(var i:uint = 0; i < Cores.length; i++)
+			for(var i:uint = 0; i < cores.length; i++)
 			{
-				core = Cores[i];
-				if((core === Sprite) || (core == null) || !core.exists || core.dead) continue;
-				core.collide(Sprite);
+				core = cores[i];
+				if((core === sprite) || (core == null) || !core.exists || core.dead) continue;
+				core.collide(sprite);
+			}
+		}
+		
+		static public function collideBuiltinArray(cores:FlxCore[],sprite:FlxSprite):void
+		{
+			if((sprite == null) || !sprite.exists || sprite.dead) return;
+			for(var core:FlxCore in cores) {
+				if((core === sprite) || (core == null) || !core.exists || core.dead) continue;
+				core.collide(sprite);
 			}
 		}
 		
@@ -461,38 +473,60 @@ class FlxG
 		//@param	Sprites		An array of FlxSprite objects
 		static public function collideArrays(Cores:FlxArray,Sprites:FlxArray):void
 		{
+            // if (!(aCores instanceof Array)) return;
+            // if (!(aSprites instanceof Array)) return;
+            // var Cores:Array = aCores;
+            // var Sprites:Array = aSprites;
 			var i:uint;
 			var j:uint;
 			var core:FlxCore;
 			var sprite:FlxSprite;
 			if(Cores === Sprites)
 			{
-				for(i = 0; i < Cores.length; i++)
-				{
-					core = Cores[i];
-					if((core == null) || !core.exists || core.dead) continue;
-					for(j = i+1; j < Sprites.length; j++)
-					{
-						sprite = Sprites[j];
-						if((sprite == null) || !sprite.exists || sprite.dead) continue;
-						core.collide(sprite);
-					}
-				}
+                for(i = 0; i < Cores.length; i++)
+                {
+                     core = Cores[i];
+                     if((core == null) || !core.exists || core.dead) continue;
+                     for(j = i+1; j < Sprites.length; j++)
+                     {
+                         sprite = Sprites[j];
+                         if((sprite == null) || !sprite.exists || sprite.dead) continue;
+                         core.collide(sprite);
+                     }
+                }
 			}
 			else
 			{
-				for(i = 0; i < Cores.length; i++)
-				{
-					core = Cores[i];
-					if((core == null) || !core.exists || core.dead) continue;
-					for(j = 0; j < Sprites.length; j++)
-					{
-						sprite = Sprites[j];
-						if((core === sprite) || (sprite == null) || !sprite.exists || sprite.dead) continue;
-						core.collide(sprite);
-					}
-				}
+                for(i = 0; i < Cores.length; i++)
+                {
+                     core = Cores[i];
+                     if((core == null) || !core.exists || core.dead) continue;
+                     for(j = 0; j < Sprites.length; j++)
+                     {
+                         sprite = Sprites[j];
+                         if((core === sprite) || (sprite == null) || !sprite.exists || sprite.dead) continue;
+                         core.collide(sprite);
+                     }
+                }
 			}
+		}
+
+		static public function collideBuiltinArrays(Cores:FlxCore[],Sprites:FlxSprite[]):void
+		{
+			var i:uint;
+			var j:uint;
+			var coresLength:uint = Cores.length;
+			var spritesLength:uint = Sprites.length;
+			var core:FlxCore;
+			var sprite:FlxSprite;
+			
+		    for(core in Cores) {
+                 if((core == null) || !core.exists || core.dead) continue;
+                 for(sprite in Sprites) {
+                     if((core === sprite) || (sprite == null) || !sprite.exists || sprite.dead) continue;
+                     core.collide(sprite);
+                 }
+            }
 		}
 		
 		//@desc		Switch from one FlxState to another

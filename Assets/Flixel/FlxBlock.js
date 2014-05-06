@@ -1,4 +1,6 @@
 #pragma strict
+#pragma implicit
+#pragma downcast
 
 //package com.adamatomic.flixel
 //{
@@ -56,7 +58,7 @@ class FlxBlock extends FlxCore
 			for(var i:uint = 0; i < numTiles; i++)
 			{
 			    var rect:Rectangle = null;
-    			var sprite:Sprite = null;
+    			var sprite:Zprite = null;
     			
 				if(Random.value*(numGraphics+Empties) > Empties) {
                     rect = new Rectangle(_tileSize*Mathf.Floor(Random.value*numGraphics),0,_tileSize,_tileSize);
@@ -91,7 +93,7 @@ class FlxBlock extends FlxCore
 		//@desc		Draws this block
 		/*override*/ public function render():void
 		{
-		    FlxG.log("This is very very slow, you should use a MegaSprite instead");
+		    //FlxG.log("This is very very slow, you should use a MegaSprite instead");
 			super.render();
 			getScreenXY(_p);
 			var opx:int = _p.x;
@@ -99,7 +101,7 @@ class FlxBlock extends FlxCore
 			{
 			    var rect:Rectangle = _rects[i];
 				if(rect != null) {
-				    var sprite:Sprite = _sprites[i];
+				    var sprite:Zprite = _sprites[i];
 				    if(!onScreen()) {
 				        if (sprite != null) {
 				            FlxG.SpriteManager.RemoveSprite(sprite);
@@ -114,7 +116,7 @@ class FlxBlock extends FlxCore
                             _sprites[i] = sprite;
 		                }
 				        //if (sprite.hidden) FlxG.SpriteManager.ShowSprite(sprite);
-    				    sprite.xform.SetTRS(new Vector3(_p.x+rect.width>>1,FlxG.height-(_p.y+rect.height>>1),0),
+    				    sprite.xform.SetTRS(new Vector3(_p.x+Mathf.Floor(rect.width)/2,FlxG.height-(_p.y+Mathf.Floor(rect.height)/2),0),
     				                        Quaternion.identity,
     				                        Vector3.one);
             		}

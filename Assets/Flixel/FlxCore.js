@@ -1,4 +1,6 @@
 #pragma strict
+#pragma implicit
+#pragma downcast
 
 //package com.adamatomic.flixel
 //{
@@ -46,7 +48,7 @@ class FlxCore
 			_flickerTimer = -1;
 		}
 		
-		virtual public function set exists(value:boolean):void
+		 public function set exists(value:boolean)
 		{
 			_exists = value;
 		}
@@ -55,7 +57,7 @@ class FlxCore
 			return _exists;
 		}
 
-		virtual public function set visible(value:boolean):void
+		 public function set visible(value:boolean)
 		{
 			_visible = value;
 		}
@@ -65,7 +67,7 @@ class FlxCore
 		}
 		
 		//@desc		Just updates the flickering.  FlxSprite and other subclasses override this to do more complicated behavior.
-		virtual public function update():void
+		 public function update():void
 		{
 			if(flickering())
 			{
@@ -80,12 +82,12 @@ class FlxCore
 		}
 		
 		//@desc		FlxSprite and other subclasses override this to render their materials to the screen
-		virtual public function render():void {}
+		 public function render():void {}
 		
 		//@desc		Checks to see if some FlxCore object overlaps this FlxCore object
 		//@param	Core	The object being tested
 		//@return	Whether or not the two objects overlap
-		virtual public function overlaps(Core:FlxCore):boolean
+		 public function overlaps(Core:FlxCore):boolean
 		{
 			var tx:Number = x;
 			var ty:Number = y;
@@ -111,8 +113,8 @@ class FlxCore
 		//@param	Y			The Y coordinate of the point
 		//@param	PerPixel	Whether or not to use per pixel collision checking (only available in FlxSprite subclass, included here because of Flash's F'd up lack of polymorphism)
 		//@return	Whether or not the point overlaps this object
-		virtual public function overlapsPoint(X:Number,Y:Number):boolean { return overlapsPoint(X,Y,false); }
-		virtual public function overlapsPoint(X:Number,Y:Number,PerPixel:boolean/* = false*/):boolean
+		 public function overlapsPoint(X:Number,Y:Number):boolean { return overlapsPoint(X,Y,false); }
+		 public function overlapsPoint(X:Number,Y:Number,PerPixel:boolean/* = false*/):boolean
 		{
 			var tx:Number = x;
 			var ty:Number = y;
@@ -128,7 +130,7 @@ class FlxCore
 		
 		//@desc		Collides a FlxSprite against this block
 		//@param	Spr		The FlxSprite you want to collide
-		virtual public function collide(Spr:FlxSprite):void
+		 public function collide(Spr:FlxSprite):void
 		{
 			var a:float = Spr.x + (Spr.width>>1) - x - (width>>1);
 			var b:float = Spr.y + (Spr.height>>1) - y - (height>>1);
@@ -310,18 +312,18 @@ class FlxCore
 		
 		//@desc		Called when this object collides with a FlxBlock on one of its sides
 		//@return	Whether you wish the FlxBlock to collide with it or not
-		virtual public function hitWall():boolean { return true; }
+		 public function hitWall():boolean { return true; }
 		
 		//@desc		Called when this object collides with the top of a FlxBlock
 		//@return	Whether you wish the FlxBlock to collide with it or not
-		virtual public function hitFloor():boolean { return true; }
+		 public function hitFloor():boolean { return true; }
 		
 		//@desc		Called when this object collides with the bottom of a FlxBlock
 		//@return	Whether you wish the FlxBlock to collide with it or not
-		virtual public function hitCeiling():boolean { return true; }
+		 public function hitCeiling():boolean { return true; }
 		
 		//@desc		Call this function to "kill" a sprite so that it no longer 'exists'
-		virtual public function kill():void
+		 public function kill():void
 		{
 			exists = false;
 			dead = true;
@@ -347,7 +349,7 @@ class FlxCore
 		
 		//@desc		Call this function to figure out the post-scrolling "screen" position of the object
 		//@param	p	Takes a Flash Point object and assigns the post-scrolled X and Y values of this object to it
-		virtual protected function getScreenXY(p:Point):void
+		 protected function getScreenXY(p:Point):void
 		{
 			p.x = Mathf.Floor(x)+Mathf.Floor(FlxG.scroll.x*scrollFactor.x);
 			p.y = Mathf.Floor(y)+Mathf.Floor(FlxG.scroll.y*scrollFactor.y);

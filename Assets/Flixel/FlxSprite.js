@@ -1,4 +1,6 @@
 #pragma strict
+#pragma implicit
+#pragma downcast
 
 //package com.adamatomic.flixel
 //{
@@ -57,7 +59,7 @@
         // private var _pixels:Texture2D;
 		private var _alpha:Number;
 		
-		public var _sprite:Sprite;
+		public var _sprite:Zprite;
 		protected var _uvCoordinatesOfFrame0:Point;
 		
 		//@desc		Constructor
@@ -107,8 +109,12 @@
 				else
 					Width = pixels.width;
 			}
+			if(Height == 0)
+			{
+				Height = pixels.height;
+			}
 			width = _bw = Width;
-			height = _bh = pixels.height;
+			height = _bh = Height; //pixels.height;
 //			_bw = Width;
 //			_bh = pixels.height;
 //			SetSizeXY(_bw, _bh);
@@ -210,7 +216,7 @@
             // }
 			getScreenXY(_p);
 
-            _sprite.xform.SetTRS(new Vector3(_p.x+_bw>>1,FlxG.height-(_p.y+_bh>>1),0),
+            _sprite.xform.SetTRS(new Vector3(_p.x+_bw/2,FlxG.height-(_p.y+_bh/2),0),
                                  Quaternion.Euler(0, 0, -angle),
                                  new Vector3(scale.x,scale.y,1));
 
@@ -273,7 +279,7 @@
 		
 		//@desc		Call this function to "damage" (or give health bonus) to this sprite
 		//@param	Damage		How much health to take away (use a negative number to give a health bonus)
-		virtual public function hurt(Damage:Number):void
+		 public function hurt(Damage:Number):void
 		{
 			health -= Damage;
 			if((health) <= 0)
@@ -290,7 +296,7 @@
 		
 		
 		//@desc		Called if/when this sprite is launched by a FlxEmitter
-		virtual public function onEmit():void { }
+		 public function onEmit():void { }
 		
 		//@desc		Adds a new animation to the sprite
 		//@param	Name		What this animation should be called (e.g. "run")
@@ -332,23 +338,24 @@
 			}
 		}
 		
-		virtual public function set exists(value:boolean):void
+		 public function set exists(value:boolean)
 		{
 			super(value);
             if (_sprite && (!_exists || !_visible) && !_sprite.hidden) FlxG.SpriteManager.HideSprite(_sprite);
             if (_sprite && _exists && _visible && _sprite.hidden) FlxG.SpriteManager.ShowSprite(_sprite);
 		}
 
-		virtual public function set visible(value:boolean):void
+		 public function set visible(value:boolean)
 		{
-			super(value);
+			//super(value);
+			_visible = value;
             if (_sprite && (!_exists || !_visible) && !_sprite.hidden) FlxG.SpriteManager.HideSprite(_sprite);
             if (_sprite && _exists && _visible && _sprite.hidden) FlxG.SpriteManager.ShowSprite(_sprite);
 		}
 		
 		//@desc		Tell the sprite which way to face (you can just set 'facing' but this function also updates the animation instantly)
 		//@param	Direction		True is Right, False is Left (see static const members RIGHT and LEFT)		
-		public function set facing(value:boolean):void
+		public function set facing(value:boolean)
 		{
 			var c:boolean = _facing != value;
 			_facing = value;
@@ -403,7 +410,7 @@
 		
 		//@desc		The setter for alpha
 		//@param	Alpha	The new opacity value of the sprite (between 0 and 1)
-		public function set alpha(value:Number):void
+		public function set alpha(value:Number)
 		{
 			if(value > 1) value = 1;
 			if(value < 0) value = 0;

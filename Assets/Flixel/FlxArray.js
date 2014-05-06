@@ -1,4 +1,6 @@
 #pragma strict
+#pragma implicit
+#pragma downcast
 
 //package com.adamatomic.flixel
 //{
@@ -15,25 +17,25 @@ class FlxArray extends Array
 		//@desc		Picks an entry at random from an array
 		//@param	Arr		The array you want to pick the object from
 		//@return	Any object
-		static public function getRandom(arr:Array):Object
-		{
-			return arr[Mathf.Floor(Random.value*arr.length)];
-		}
+        // static public function getRandom(arr:Array):Object
+        // {
+        //  return arr[Mathf.Floor(Random.value*arr.length)];
+        // }
 		
 		//@desc		Find the first entry in the array that doesn't "exist"
 		//@return	Anything based on FlxCore (FlxSprite, FlxText, FlxBlock, etc)
-		public function getNonexist():FlxCore
-		{
-			if(this.length <= 0) return null;
-			var i:uint = 0;
-			while(true)
-			{
-				if(!(this[i] as FlxCore).exists)
-					return this[i];
-				if(++i >= this.length) break;
-			}
-			return null;
-		}
+        // public function getNonexist():FlxCore
+        // {
+        //  if(this.length <= 0) return null;
+        //  var i:uint = 0;
+        //  while(true)
+        //  {
+        //      if(!(this[i] as FlxCore).exists)
+        //          return this[i];
+        //      if(++i >= this.length) break;
+        //  }
+        //  return null;
+        // }
 		
 		//@desc		Add an object to this array
 		//@param	Obj		The object you want to add to the array
@@ -57,13 +59,13 @@ class FlxArray extends Array
 		
 		//@desc		Remove any object from this array
 		//@param	Index	The entry in the array that you want to remove
-		public function removeAt(Index:uint,Splice:boolean/*=false*/):void
-		{
-			if(Splice)
-				this.splice(Index,1);
-			else
-				this[Index] = null;
-		}
+        // public function removeAt(Index:uint,Splice:boolean/*=false*/):void
+        // {
+        //  if(Splice)
+        //      this.splice(Index,1);
+        //  else
+        //      this[Index] = null;
+        // }
 		
 		//@desc		Kills the specified FlxCore-based object (FlxSprite, FlxText, etc) in this array
 		//@param	Core	The object you want to kill
@@ -74,18 +76,18 @@ class FlxArray extends Array
 		
 		//@desc		Kills the specified FlxCore-based object (FlxSprite, FlxText, etc) in this array
 		//@param	Index	The entry in the array that you want to kill
-		public function killAt(Index:uint):void
-		{
-			if(this[Index] instanceof FlxCore) {
-				var thing:FlxCore = this[Index];
-				thing.kill();
-			}
-		}
+        // public function killAt(Index:uint):void
+        // {
+        //  if(this[Index] instanceof FlxCore) {
+        //      var thing:FlxCore = this[Index];
+        //      thing.kill();
+        //  }
+        // }
 		
 		//@desc		Pops every entry out of the array
-		public function clear():void
-		{
-			this.length = 0;
-		}
+        // public function clear():void
+        // {
+        //  this.length = 0;
+        // }
 	}
 //}

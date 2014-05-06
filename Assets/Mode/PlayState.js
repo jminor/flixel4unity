@@ -1,4 +1,6 @@
 #pragma strict
+#pragma implicit
+#pragma downcast
 
 //package com.adamatomic.Mode
 //{
@@ -22,11 +24,15 @@ static public var SndCount:AudioClip;
 
 		//major game objects
 		private var _blocks:FlxArray;
+		private var _blocks2:FlxCore[];
 		private var _bullets:FlxArray;
+		private var _bullets2:FlxSprite[];
 		private var _player:Player;
 		private var _bots:FlxArray;
+		private var _bots2:FlxSprite[];
 		private var _spawners:FlxArray;
 		private var _botBullets:FlxArray;
+		private var _botBullets2:FlxSprite[];
 
 		//HUD
 		private var _score:FlxText;
@@ -160,7 +166,25 @@ static public var SndCount:AudioClip;
 			FlxG.setMusic(SndMode);
 			FlxG.flash(0xff131c1b);
 			_fading = false;
+			
+			// Snapshot these arrays into fixed size builtin arrays for speed
+			_blocks2 = _blocks.ToBuiltin(FlxCore);
+			_bullets2 = _bullets.ToBuiltin(FlxSprite);
+			_bots2 = _bots.ToBuiltin(FlxSprite);
+			_botBullets2 = _botBullets.ToBuiltin(FlxSprite);
+			
+            // debugArray("_blocks2", _blocks2);
+            // debugArray("_bullets2", _bullets2);
+            // debugArray("_bots2", _bots2);
+            // debugArray("_botBullets2", _botBullets2);
 		}
+
+        public function debugArray(desc:String, arr:Object[]) {
+            Debug.Log(desc+"["+arr.Length+"]");
+            for(i=0; i<arr.Length; i++) {
+                Debug.Log(i+": " + arr[i]);
+            }
+        }
 
 		/*override*/ public function update():void
 		{
@@ -170,15 +194,18 @@ static public var SndCount:AudioClip;
             super.update();
 			
 			// ~10ms
+            
+            // this is the only array that updates dynamically
+			_bots2 = _bots.ToBuiltin(FlxSprite);
 
 			//collisions with environment
-            FlxG.collideArrays(_blocks,_bullets);
-            FlxG.collideArrays(_blocks,_botBullets);
-            FlxG.collideArrays(_blocks,_bots);
-            FlxG.collideArray(_blocks,_player);
+            FlxG.collideBuiltinArrays(_blocks2,_bullets2);
+            FlxG.collideBuiltinArrays(_blocks2,_botBullets2);
+            FlxG.collideBuiltinArrays(_blocks2,_bots2);
+            FlxG.collideBuiltinArray(_blocks2,_player);
             
             //don't let bots overlap
-            FlxG.collideArrays(_bots,_bots);
+            FlxG.collideBuiltinArrays(_bots2,_bots2);
             
             //collisions between sprites
             FlxG.overlapArrays(_bullets,_bots,bulletHitBot);

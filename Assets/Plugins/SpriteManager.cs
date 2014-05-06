@@ -16,7 +16,7 @@ using System.Collections;
 //-----------------------------------------------------------------
 // Describes a sprite
 //-----------------------------------------------------------------
-public class Sprite
+public class Zprite
 {
 	protected float m_width;					// Width and Height of the sprite in worldspace units
 	protected float m_height;
@@ -57,7 +57,7 @@ public class Sprite
 	public int cv3;
 	public int cv4;
 
-	public Sprite()
+	public Zprite()
 	{
 	    init();
     }
@@ -277,7 +277,7 @@ public class SpriteManager : MonoBehaviour
 	protected bool colorsChanged = false;	// Have the colors changed?
 	protected bool vertCountChanged = false;// Has the number of vertices changed?
 	protected bool updateBounds = false;	// Update the mesh bounds?
-	public Sprite[] sprites;				// Array of all sprites (the offset of the vertices corresponding to each sprite should be found simply by taking the sprite's index * 4 (4 verts per sprite).
+	public Zprite[] sprites;				// Array of all sprites (the offset of the vertices corresponding to each sprite should be found simply by taking the sprite's index * 4 (4 verts per sprite).
 	protected ArrayList activeBlocks = new ArrayList();	// Array of references to all the currently active (non-empty) sprites
 	protected ArrayList activeBillboards = new ArrayList(); // Array of references to all the *active* sprites which are to be rendered as billboards
 	protected float boundUpdateInterval;	// Interval, in seconds, to update the mesh bounds
@@ -367,7 +367,7 @@ public class SpriteManager : MonoBehaviour
 	// Allocates initial arrays
 	protected void InitArrays()
 	{
-		sprites = new Sprite[1];
+		sprites = new Zprite[1];
 		vertices = new Vector3[4];
 		UVs = new Vector2[4];
 		colors = new Color[4];
@@ -397,8 +397,8 @@ public class SpriteManager : MonoBehaviour
 	    //Debug.Log("enlarge "+sprites.Length+" +"+count+" colors="+colors.Length+" vertices="+vertices.Length);
 
 		// Resize sprite array:
-		Sprite[] tempSprites = sprites;
-		sprites = new Sprite[sprites.Length + count];
+		Zprite[] tempSprites = sprites;
+		sprites = new Zprite[sprites.Length + count];
 		tempSprites.CopyTo(sprites, 0);
 
 		// Vertices:
@@ -433,7 +433,7 @@ public class SpriteManager : MonoBehaviour
 		{
 			// Create and setup sprite:
 
-			sprites[i] = new Sprite();
+			sprites[i] = new Zprite();
 			sprites[i].index = i;
 			sprites[i].manager = this;
 
@@ -499,7 +499,7 @@ public class SpriteManager : MonoBehaviour
 	// Width and height are in world space units
 	// leftPixelX and bottomPixelY- the bottom-left position of the desired portion of the texture, in pixels
 	// pixelWidth and pixelHeight - the dimensions of the desired portion of the texture, in pixels
-	public Sprite AddSprite(GameObject client, float width, float height, int leftPixelX, int bottomPixelY, int pixelWidth, int pixelHeight, bool billboarded)
+	public Zprite AddSprite(GameObject client, float width, float height, int leftPixelX, int bottomPixelY, int pixelWidth, int pixelHeight, bool billboarded)
 	{
 		return AddSprite(client, width, height, PixelCoordToUVCoord(leftPixelX, bottomPixelY), PixelSpaceToUVSpace(pixelWidth, pixelHeight), billboarded);
 	}
@@ -509,7 +509,7 @@ public class SpriteManager : MonoBehaviour
 	// Width and height are in world space units
 	// lowerLeftUV - the UV coordinate for the upper-left corner
 	// UVDimensions - the distance from lowerLeftUV to place the other UV coords
-	public Sprite AddSprite(GameObject client, float width, float height, Vector2 lowerLeftUV, Vector2 UVDimensions, bool billboarded)
+	public Zprite AddSprite(GameObject client, float width, float height, Vector2 lowerLeftUV, Vector2 UVDimensions, bool billboarded)
 	{
 		int spriteIndex;
 
@@ -518,11 +518,11 @@ public class SpriteManager : MonoBehaviour
 			EnlargeArrays(allocBlockSize);	// If we're out of available sprites, allocate some more:
 
 		// Use a sprite from the list of available blocks:
-		spriteIndex = ((Sprite)availableBlocks[0]).index;
+		spriteIndex = ((Zprite)availableBlocks[0]).index;
 		availableBlocks.RemoveAt(0);	// Now that we're using this one, remove it from the available list
 
 		// Assign the new sprite:
-		Sprite newSprite = sprites[spriteIndex];
+		Zprite newSprite = sprites[spriteIndex];
 		newSprite.xform = new Matrix4x4();
 		newSprite.client = client;
 		newSprite.lowerLeftUV = lowerLeftUV;
@@ -570,7 +570,7 @@ public class SpriteManager : MonoBehaviour
 		return newSprite;
 	}
 
-	public void SetBillboarded(Sprite sprite)
+	public void SetBillboarded(Zprite sprite)
 	{
 		// Make sure the sprite isn't in the active list
 		// or else it'll get handled twice:
@@ -578,7 +578,7 @@ public class SpriteManager : MonoBehaviour
 		activeBillboards.Add(sprite);
 	}
 
-	public void RemoveSprite(Sprite sprite)
+	public void RemoveSprite(Zprite sprite)
 	{
 		sprite.SetSizeXY(0,0);
 		sprite.v1 = Vector3.zero;
@@ -608,7 +608,7 @@ public class SpriteManager : MonoBehaviour
 		vertsChanged = true;
 	}
 	
-	public void HideSprite(Sprite sprite)
+	public void HideSprite(Zprite sprite)
 	{
 		vertices[sprite.mv1] = Vector3.zero;
 		vertices[sprite.mv2] = Vector3.zero;
@@ -628,7 +628,7 @@ public class SpriteManager : MonoBehaviour
 		vertsChanged = true;
 	}
 
-	public void ShowSprite(Sprite sprite)
+	public void ShowSprite(Zprite sprite)
 	{
 		// Only show the sprite if it has a client:
         // if(sprite.client == null)
@@ -647,7 +647,7 @@ public class SpriteManager : MonoBehaviour
 		vertsChanged = true;
 	}
 
-	public Sprite GetSprite(int i)
+	public Zprite GetSprite(int i)
 	{
 		if (i < sprites.Length)
 			return sprites[i];
@@ -657,7 +657,7 @@ public class SpriteManager : MonoBehaviour
 
 	// Updates the vertices of a sprite based on the transform
 	// of its client GameObject
-	public void Transform(Sprite sprite)
+	public void Transform(Zprite sprite)
 	{
 		sprite.Transform();
 
@@ -666,7 +666,7 @@ public class SpriteManager : MonoBehaviour
 
 	// Updates the vertices of a sprite such that it is oriented
 	// more or less toward the camera
-	public void TransformBillboarded(Sprite sprite)
+	public void TransformBillboarded(Zprite sprite)
 	{
 		Vector3 pos = sprite.clientTransform.position;
 		Transform t = Camera.main.transform;
@@ -688,7 +688,7 @@ public class SpriteManager : MonoBehaviour
 
 	// Updates the UVs of the specified sprite and copies the new values
 	// into the mesh object.
-	public void UpdateUV(Sprite sprite)
+	public void UpdateUV(Zprite sprite)
 	{
 		UVs[sprite.uv1] = sprite.lowerLeftUV + Vector2.up * sprite.uvDimensions.y;	// Upper-left
 		UVs[sprite.uv2] = sprite.lowerLeftUV;										// Lower-left
@@ -700,7 +700,7 @@ public class SpriteManager : MonoBehaviour
 
 	// Updates the color values of the specified sprite and copies the
 	// new values into the mesh object.
-	public void UpdateColors(Sprite sprite)
+	public void UpdateColors(Zprite sprite)
 	{
 		colors[sprite.cv1] = sprite.color;
 		colors[sprite.cv2] = sprite.color;
@@ -737,7 +737,7 @@ public class SpriteManager : MonoBehaviour
 	}
 	
 	// LateUpdate is called once per frame
-	virtual public void LateUpdate () 
+	public void LateUpdate () 
 	{
 		// Were changes made to the mesh since last time?
 		if (vertCountChanged)

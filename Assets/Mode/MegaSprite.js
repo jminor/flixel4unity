@@ -1,4 +1,6 @@
 #pragma strict
+#pragma implicit
+#pragma downcast
 
 // This new class was introduced by jminor in an attempt to make Flixel work within Unity
 // This class takes a bunch of other sprites (usually blocks) and pre-composites them into a

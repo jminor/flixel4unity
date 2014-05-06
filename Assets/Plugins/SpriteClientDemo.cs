@@ -53,7 +53,7 @@ public class SpriteClientDemo : MonoBehaviour
 		// Create sprites for three of the balls:
 		for(int i=0; i<3; ++i)
 		{
-			Sprite s = spriteMan.AddSprite((GameObject)balls[i], // The game object to associate the sprite to
+			Zprite s = spriteMan.AddSprite((GameObject)balls[i], // The game object to associate the sprite to
 										1f, 		// The width of the sprite
 										1f, 		// The height of the sprite
 										251, 		// Left pixel
@@ -67,7 +67,7 @@ public class SpriteClientDemo : MonoBehaviour
 		// Create billboarded sprites for the other three balls:
 		for(int i=3; i<6; ++i)
 		{
-			Sprite s = spriteMan.AddSprite((GameObject)balls[i], // The game object to associate the sprite to
+			Zprite s = spriteMan.AddSprite((GameObject)balls[i], // The game object to associate the sprite to
 										1f, 		// The width of the sprite
 										1f, 		// The height of the sprite
 										251, 		// Left pixel
@@ -81,7 +81,7 @@ public class SpriteClientDemo : MonoBehaviour
 		// Create sprites for three of the cans:
 		for(int i=0; i<3; ++i)
 		{
-			Sprite s = spriteMan.AddSprite((GameObject)cans[i], // The game object to associate the sprite to
+			Zprite s = spriteMan.AddSprite((GameObject)cans[i], // The game object to associate the sprite to
 										0.524f,		// The width of the sprite
 										1f,			// The height of the sprite
 										3, 			// Left pixel
@@ -95,7 +95,7 @@ public class SpriteClientDemo : MonoBehaviour
 		// Create billboarded sprites for the other three cans:
 		for(int i=3; i<6; ++i)
 		{
-			Sprite s = spriteMan.AddSprite((GameObject)cans[i], // The game object to associate the sprite to
+			Zprite s = spriteMan.AddSprite((GameObject)cans[i], // The game object to associate the sprite to
 										0.524f,		// The width of the sprite
 										1f,			// The height of the sprite
 										3, 			// Left pixel
@@ -115,24 +115,24 @@ public class SpriteClientDemo : MonoBehaviour
 	// Update is called once per frame
 	void Update () 
 	{
-		Sprite s;
+		Zprite s;
 		
 		counter += 0.1f;
 		
 		// UV animate one of the cans:
 		if( ((int)counter) % 3 == 0 )
 		{
-			s = (Sprite)canSprites[0];
+			s = (Zprite)canSprites[0];
 			
 			s.lowerLeftUV = (((int)counter) % 2 == 0)?drPepperUV:cokeUV;
 			
 			// Cause another can to flash (hide/unhide):
-			s = (Sprite)canSprites[1];
+			s = (Zprite)canSprites[1];
 			s.hidden = (((int)counter) % 2 == 0);
 		}
 		
 		// Cause one of the balls to fade in and out:
-		s = (Sprite)ballSprites[0];
+		s = (Zprite)ballSprites[0];
 		
 		s.SetColor(new Color(1, 1, 1, Mathf.Cos(counter/2f)));
 	}

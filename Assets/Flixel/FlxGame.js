@@ -1,4 +1,6 @@
 #pragma strict
+#pragma implicit
+#pragma downcast
 
 //package com.adamatomic.flixel
 //{
@@ -122,7 +124,7 @@ private var SndFlixel:Object;
 		private var _fadeComplete:Function;
 		
 		private var _useKeyboard:boolean;
-		
+				
 		//@desc		Constructor
 		//@param	GameSizeX		The width of your game in pixels (e.g. 320)
 		//@param	GameSizeY		The height of your game in pixels (e.g. 240)
@@ -136,6 +138,20 @@ private var SndFlixel:Object;
 		//@param	ScreenOffsetY	These variables do exactly that!		
 		public function init(GameSizeX:uint,GameSizeY:uint,InitialState:System.Type,Zoom:uint/*=2*/,BGColor:long/*=0xff000000*/,ShowFlixelLogo:boolean/*=true*/,FlixelColor:long/*=0xffffffff*/,FlixelSound:Object/*=null*/,Frame:Object/*=null*/,ScreenOffsetX:uint/*=0*/,ScreenOffsetY:uint/*=0*/)
 		{
+		    // Start off in the right orientation
+            // if ((Input.orientation == Orientation.LandscapeLeft) && (Settings.screenOrientation != ScreenOrientation.LandscapeLeft)){ 
+            //                 Settings.screenOrientation = ScreenOrientation.LandscapeLeft; 
+            //             }
+            //             if ((Input.orientation == Orientation.LandscapeRight) && (Settings.screenOrientation != ScreenOrientation.LandscapeRight)){ 
+            //                 Settings.screenOrientation = ScreenOrientation.LandscapeRight; 
+            //             }
+            
+            // Disable any screen rotation during the game
+            // Keyboard.autorotateToPortrait = false; 
+            //             Keyboard.autorotateToPortraitUpsideDown = false; 
+            //             Keyboard.autorotateToLandscapeLeft = false; 
+            //             Keyboard.autorotateToLandscapeRight = false;
+               
 			_z = Zoom;
 			_gx = ScreenOffsetX;
 			_gy = ScreenOffsetY;
@@ -170,11 +186,21 @@ private var SndFlixel:Object;
 			_help.push("Mouse");
 			_help.push("Move");
 			_showLogo = ShowFlixelLogo;
-			if (Application.platform == RuntimePlatform.IPhonePlayer) {
-			    _useKeyboard = false;
-		    }else{
-		        _useKeyboard = true;
-		    }
+			
+			// anything except the iPhone
+			// It sure would be nice if RuntimePlatform.IPhonePlayer was defined in non-iPhone Unity
+			if (Application.platform == RuntimePlatform.OSXEditor ||
+			    Application.platform == RuntimePlatform.OSXPlayer ||
+			    Application.platform == RuntimePlatform.WindowsPlayer ||
+			    Application.platform == RuntimePlatform.OSXWebPlayer ||
+			    Application.platform == RuntimePlatform.OSXDashboardPlayer ||
+			    Application.platform == RuntimePlatform.WindowsWebPlayer ||
+			    Application.platform == RuntimePlatform.WindowsEditor
+			    ) {
+			    _useKeyboard = true;
+            }else{
+                _useKeyboard = false;
+            }
 		}
 		
 		//@desc		Sets up the strings that are displayed on the left side of the pause game popup
@@ -341,11 +367,11 @@ private var SndFlixel:Object;
 		{
             if (Input.GetKeyDown(KeyCode.Space)) {
                 FlxG.resetKeys();
-                _useKeyboard = !_useKeyboard;
+                _useKeyboard = true;
             }
             
+            // Keyboard in the simulator
             if (_useKeyboard) {
-                // Keyboard in the simulator
                 if (Input.GetKeyDown (KeyCode.X)) FlxG.pressKey  (FlxG.A);
                 if (Input.GetKeyUp   (KeyCode.X)) FlxG.releaseKey(FlxG.A);
                 if (Input.GetKeyDown (KeyCode.C)) FlxG.pressKey  (FlxG.B);
@@ -359,48 +385,65 @@ private var SndFlixel:Object;
                 if (Input.GetKeyDown (KeyCode.RightArrow)) FlxG.pressKey  (FlxG.RIGHT);
                 if (Input.GetKeyUp   (KeyCode.RightArrow)) FlxG.releaseKey(FlxG.RIGHT);
             }else{
-        
-                 // iPhone tilt on the device
-                 var sensitivity = 0.2;
-                 var leftRightTilt = -iPhoneInput.acceleration.y;
-                 var upDownTilt = -iPhoneInput.acceleration.x;
-
-                 if (leftRightTilt < -sensitivity) {
-                     if (!FlxG.kLeft) FlxG.pressKey(FlxG.LEFT);
-                     if (FlxG.kRight) FlxG.releaseKey(FlxG.RIGHT);
-                 }else
-                 if (leftRightTilt > sensitivity) {
-                     if (FlxG.kLeft) FlxG.releaseKey(FlxG.LEFT);
-                     if (!FlxG.kRight) FlxG.pressKey(FlxG.RIGHT);
-                 }else{
-                     if (FlxG.kLeft) FlxG.releaseKey(FlxG.LEFT);
-                     if (FlxG.kRight) FlxG.releaseKey(FlxG.RIGHT);
-                 }
-
-                 if (upDownTilt < -sensitivity) {
-                     if (!FlxG.kUp) FlxG.pressKey(FlxG.UP);
-                     if (FlxG.kDown) FlxG.releaseKey(FlxG.DOWN);
-                 }else
-                 if (upDownTilt > sensitivity) {
-                     if (FlxG.kUp) FlxG.releaseKey(FlxG.UP);
-                     if (!FlxG.kDown) FlxG.pressKey(FlxG.DOWN);
-                 }else{
-                     if (FlxG.kUp) FlxG.releaseKey(FlxG.UP);
-                     if (FlxG.kDown) FlxG.releaseKey(FlxG.DOWN);
-                 }
-
-                 for(t=0; t<iPhoneInput.touchCount; t++) {
-                     var touch:iPhoneTouch = iPhoneInput.GetTouch(t);
-                     if (touch.phase == iPhoneTouchPhase.Began) {
-                         if (touch.position.x < 240) FlxG.pressKey(FlxG.A);
-                         else FlxG.pressKey(FlxG.B);
-                     }else if (touch.phase == iPhoneTouchPhase.Ended || touch.phase == iPhoneTouchPhase.Canceled) {
-                         if (touch.position.x < 240) FlxG.releaseKey(FlxG.A);
-                         else FlxG.releaseKey(FlxG.B);
-                     }
-                 }
-             }
+                gatherIPhoneInputs();
+            }
         }
+		
+		function gatherIPhoneInputs()
+		{
+		    // Don't do this every frame because we will often tilt the game a lot while playing
+            // if ((iPhoneInput.orientation == iPhoneOrientation.LandscapeLeft) && (iPhoneSettings.screenOrientation != iPhoneScreenOrientation.LandscapeLeft)){ 
+            //                 iPhoneSettings.screenOrientation = iPhoneScreenOrientation.LandscapeLeft; 
+            //             }
+            //             if ((iPhoneInput.orientation == iPhoneOrientation.LandscapeRight) && (iPhoneSettings.screenOrientation != iPhoneScreenOrientation.LandscapeRight)){ 
+            //                 iPhoneSettings.screenOrientation = iPhoneScreenOrientation.LandscapeRight; 
+            //             }
+		    
+            // iPhone tilt on the device
+            var sensitivity = 0.2;
+            var leftRightTilt = -Input.acceleration.y;    // if you get errors here - then comment out the body of this entire function
+            var upDownTilt = -Input.acceleration.x;
+            
+            // if (Settings.screenOrientation == ScreenOrientation.LandscapeRight) {
+            //     leftRightTilt = -leftRightTilt;
+            //     upDownTilt = -upDownTilt;
+            // }
+            
+            if (leftRightTilt < -sensitivity) {
+                if (!FlxG.kLeft) FlxG.pressKey(FlxG.LEFT);
+                if (FlxG.kRight) FlxG.releaseKey(FlxG.RIGHT);
+            }else
+            if (leftRightTilt > sensitivity) {
+                if (FlxG.kLeft) FlxG.releaseKey(FlxG.LEFT);
+                if (!FlxG.kRight) FlxG.pressKey(FlxG.RIGHT);
+            }else{
+                if (FlxG.kLeft) FlxG.releaseKey(FlxG.LEFT);
+                if (FlxG.kRight) FlxG.releaseKey(FlxG.RIGHT);
+            }
+            
+            if (upDownTilt < -sensitivity) {
+                if (!FlxG.kUp) FlxG.pressKey(FlxG.UP);
+                if (FlxG.kDown) FlxG.releaseKey(FlxG.DOWN);
+            }else
+            if (upDownTilt > sensitivity) {
+                if (FlxG.kUp) FlxG.releaseKey(FlxG.UP);
+                if (!FlxG.kDown) FlxG.pressKey(FlxG.DOWN);
+            }else{
+                if (FlxG.kUp) FlxG.releaseKey(FlxG.UP);
+                if (FlxG.kDown) FlxG.releaseKey(FlxG.DOWN);
+            }
+            
+            for(t=0; t<Input.touchCount; t++) {
+                var touch:Touch = Input.GetTouch(t);
+                if (touch.phase == TouchPhase.Began) {
+                    if (touch.position.x < 240) FlxG.pressKey(FlxG.A);
+                    else FlxG.pressKey(FlxG.B);
+                }else if (touch.phase == TouchPhase.Ended || touch.phase == TouchPhase.Canceled) {
+                    if (touch.position.x < 240) FlxG.releaseKey(FlxG.A);
+                    else FlxG.releaseKey(FlxG.B);
+                }
+            }
+	    }
 		
 		//@desc		This is the main game loop, but only once creation and logo playback is finished
 		//private function onEnterFrame(event:Event):void
@@ -414,6 +457,7 @@ private var SndFlixel:Object;
 			_elapsed = (t-_total)/1000.0;
 			_total = t;
 			FlxG.elapsed = _elapsed;
+			FlxG.frameCounter = _frameCounter;
 			if(FlxG.elapsed > MAX_ELAPSED)
 				FlxG.elapsed = MAX_ELAPSED;
 				

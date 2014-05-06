@@ -1,4 +1,6 @@
 #pragma strict
+#pragma implicit
+#pragma downcast
 
 //	[SWF(width="640", height="480", backgroundColor="#000000")]
 //	[Frame(factoryClass="Preloader")]

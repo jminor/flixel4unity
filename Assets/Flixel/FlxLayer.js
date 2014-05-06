@@ -1,4 +1,6 @@
 #pragma strict
+#pragma implicit
+#pragma downcast
 
 //package com.adamatomic.flixel
 //{
@@ -16,7 +18,7 @@
 		
 		//@desc		Adds a new FlxCore subclass (FlxSprite, FlxBlock, etc) to the list of children
 		//@param	Core	The object you want to add
-		virtual public function add(Core:FlxCore):FlxCore
+		 public function add(Core:FlxCore):FlxCore
 		{
 			return _children.add(Core) as FlxCore;
 		}

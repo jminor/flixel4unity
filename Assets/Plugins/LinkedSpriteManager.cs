@@ -30,7 +30,7 @@ public class LinkedSpriteManager : SpriteManager
 	{
 		for(int i=0; i<activeBlocks.Count; ++i)
 		{
-			((Sprite)activeBlocks[i]).Transform();
+			((Zprite)activeBlocks[i]).Transform();
 		}
 
 		// Handle any billboarded sprites:
@@ -38,11 +38,11 @@ public class LinkedSpriteManager : SpriteManager
 		{
 			Transform t = Camera.main.transform;
 			Vector3 pos;
-			Sprite s;
+			Zprite s;
 
 			for(int i=0; i<activeBillboards.Count; ++i)
 			{
-				s = (Sprite)activeBillboards[i];
+				s = (Zprite)activeBillboards[i];
 				pos = s.clientTransform.position;
 
 				vertices[s.mv1] = pos + t.TransformDirection(s.v1);

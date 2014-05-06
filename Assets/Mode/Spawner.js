@@ -1,4 +1,6 @@
 #pragma strict
+#pragma implicit
+#pragma downcast
 
 //package com.adamatomic.Mode
 //{
@@ -22,9 +24,9 @@ static public var SndHit:AudioClip;
 		private var _b:FlxArray;
 		private var _b2:FlxArray;
 		private var _gibs:FlxEmitter;
-		private var _p:Player;
+		private var _p:FlxSprite;
 		
-		public function Spawner(X:int, Y:int,Bots:FlxArray,BotBullets:FlxArray,ThePlayer:Player)
+		public function Spawner(X:int, Y:int,Bots:FlxArray,BotBullets:FlxArray,ThePlayer:FlxSprite)
 		{
 			super(ImgSpawner, X, Y, true, false);
 			_b = Bots;

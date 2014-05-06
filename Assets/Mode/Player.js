@@ -1,4 +1,6 @@
 #pragma strict
+#pragma implicit
+#pragma downcast
 
 //package com.adamatomic.Mode
 //{
@@ -80,7 +82,7 @@ class Player extends FlxSprite
 			_gibs = FlxG.state.add(new FlxEmitter(0,0,0,0,null,-1.5,-150,150,-200,0,-720,720,400,0,ImgGibs,10,true,null)) as FlxEmitter;
 			
 			//jetpack
-			_fuel = 500;
+			_fuel = 5000;
             _jets = FlxG.state.add(new FlxEmitter(0,0,0,0,null,0.01,-10,10,20,50,0,0,0,0,ImgJet,10,false,null)) as FlxEmitter;
             _jets.kill();
             
@@ -203,7 +205,7 @@ class Player extends FlxSprite
             	_jets.y = this.y;
             	_jets.x = this.x + 3;
             }
-            if(!_boosters && _fuel<400)
+            if(!_boosters && _fuel<5000)
             {
             	_fuel += 20;
             }
