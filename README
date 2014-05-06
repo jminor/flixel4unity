@@ -1,0 +1,11 @@
+This is a bare-bones port of Adam Atomic's Flixel 2D game engine to Unity.
+
+I made it over a long weekend way back in 2010 as a way to get my Flixel game running on the iPhone. I got it to work at a very basic level and then abandoned it. Since then, Flixel has received many updates and has been ported to native Cocoa, which makes the original intent of this port moot. Also, more recently, Unity has added native 2D sprite support, which also makes this port less useful.
+
+Still, some folks have found this port helpful.
+
+In mid-2014 I made a very small update to make it compile and run in Unity 4.3. It still uses the old SpriteManager instead of Unity's new modern 2D sprite classes.
+
+If you are starting a new 2D game, please don't try to use this code. If you are porting an existing Flixel game to Unity, this might be helpful. Feel free to contact me with questions.
+
+-josh
